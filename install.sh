@@ -3,13 +3,13 @@
 [ "$EUID" -ne 0 ] && echo "Please run as root" && exit 1
 
 function installFunc() {
-	[ ! -f scan2epub ] && echo "clitemplate not found" && exit 1
-	echo "Installing clitemplate to /usr/bin/clitemplate"
+	[ ! -f scan2epub ] && echo "ai not found" && exit 1
+	echo "Installing ai to /usr/bin/ai"
 	install -Dm 755 scan2epub /usr/bin/scan2epub
 }
 
 function uninstall() {
-	echo "Uninstalling clitemplate from /usr/bin/clitemplate"
+	echo "Uninstalling ai from /usr/bin/ai"
 	rm -f /usr/bin/scan2epub
 }
 

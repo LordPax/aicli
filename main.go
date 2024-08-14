@@ -1,10 +1,10 @@
 package main
 
 import (
-	"clitemplate/commands"
-	"clitemplate/config"
-	"clitemplate/lang"
-	"clitemplate/utils"
+	"ai/commands"
+	"ai/config"
+	"ai/lang"
+	"ai/utils"
 	"fmt"
 	"os"
 

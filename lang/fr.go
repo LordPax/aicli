@@ -1,7 +1,7 @@
 package lang
 
 var FR_STRINGS = LangString{
-	"usage":            "Modèle d'outil CLI",
+	"usage":            "CLI pour utiliser des modèles d'IA",
 	"output-desc":      "Répertoire de sortie",
 	"output-dir-empty": "Le répertoire de sortie est vide",
 	"silent":           "Désactiver l'impression du journal sur stdout",

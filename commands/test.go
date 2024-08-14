@@ -1,8 +1,8 @@
 package commands
 
 import (
-	"clitemplate/lang"
-	"clitemplate/utils"
+	"ai/lang"
+	"ai/utils"
 	"fmt"
 
 	cli "github.com/urfave/cli/v2"

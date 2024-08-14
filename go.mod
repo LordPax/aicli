@@ -1,4 +1,4 @@
-module clitemplate
+module ai
 
 go 1.22.6
 

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"clitemplate/utils"
+	"ai/utils"
 	"fmt"
 	"os"
 	"path"
@@ -10,16 +10,16 @@ import (
 var home, _ = os.UserHomeDir()
 
 var (
-	NAME           = "cli-template"
+	NAME           = "ai"
 	VERSION        = "1.0.0"
-	CONFIG_DIR     = path.Join(home, ".config", "cli-template")
-	CONFIG_FILE    = path.Join(CONFIG_DIR, "config")
+	CONFIG_DIR     = path.Join(home, ".config", "aicli")
+	CONFIG_FILE    = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE       = path.Join(CONFIG_DIR, "log")
-	CONFIG_EXEMPLE = `# Configuration file for cli-template`
+	CONFIG_EXEMPLE = `# Configuration file for aicli`
 )
 
 func InitConfig() error {
-	tmpName, err := os.MkdirTemp("", "cli-template")
+	tmpName, err := os.MkdirTemp("", "aicli")
 	if err != nil {
 		return err
 	}
