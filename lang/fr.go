@@ -8,4 +8,5 @@ var FR_STRINGS = LangString{
 	"hello-world":      "Bonjour, monde %s\n",
 	"no-args":          "Aucun argument fourni",
 	"no-command":       "Aucune commande fournie",
+	"text-usage":       "Générer du texte à partir d'un prompt",
 }

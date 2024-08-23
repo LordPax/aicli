@@ -1,15 +1,16 @@
 package main
 
 import (
-	"ai/commands"
-	"ai/config"
-	"ai/lang"
-	"ai/utils"
 	"fmt"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/LordPax/aicli/commands"
+	"github.com/LordPax/aicli/config"
+	"github.com/LordPax/aicli/lang"
+	"github.com/LordPax/aicli/utils"
+
 	cli "github.com/urfave/cli/v2"
+	ini "gopkg.in/ini.v1"
 )
 
 func main() {
@@ -25,7 +26,8 @@ func main() {
 	}
 	defer log.Close()
 
-	if err := godotenv.Load(config.CONFIG_FILE); err != nil {
+	config.CONFIG_INI, err = ini.Load(config.CONFIG_FILE)
+	if err != nil {
 		log.PrintfErr("%v\n", err)
 		os.Exit(1)
 	}
@@ -42,7 +44,7 @@ func main() {
 	app.Action = commands.MainAction
 	app.Flags = commands.MainFlags()
 	app.Commands = []*cli.Command{
-		commands.TestCommand(),
+		commands.TextCommand(),
 	}
 
 	if err := app.Run(os.Args); err != nil {

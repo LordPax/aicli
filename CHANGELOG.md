@@ -4,4 +4,5 @@
 
 ### Added
 
-* Add this cli template
+* Add localized for `en` and `fr`
+* Read config.ini file

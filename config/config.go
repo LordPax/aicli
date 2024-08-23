@@ -1,10 +1,13 @@
 package config
 
 import (
-	"ai/utils"
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/LordPax/aicli/utils"
+
+	ini "gopkg.in/ini.v1"
 )
 
 var home, _ = os.UserHomeDir()
@@ -15,7 +18,14 @@ var (
 	CONFIG_DIR     = path.Join(home, ".config", "aicli")
 	CONFIG_FILE    = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE       = path.Join(CONFIG_DIR, "log")
-	CONFIG_EXEMPLE = `# Configuration file for aicli`
+	CONFIG_INI     *ini.File
+	CONFIG_EXEMPLE = `# Configuration file for aicli
+[text]
+type=openai
+route=https://api.openai.com/v1
+model=gpt4
+api_key=yoursecretapikey
+temp=0.7`
 )
 
 func InitConfig() error {

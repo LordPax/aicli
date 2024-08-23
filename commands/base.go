@@ -1,9 +1,10 @@
 package commands
 
 import (
-	"ai/lang"
-	"ai/utils"
 	"fmt"
+
+	"github.com/LordPax/aicli/lang"
+	"github.com/LordPax/aicli/utils"
 
 	cli "github.com/urfave/cli/v2"
 )
