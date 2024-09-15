@@ -1,5 +1,16 @@
 package service
 
-func SendTextRequest(text string) (string, error) {
-	return text, nil
+import (
+	"github.com/LordPax/aicli/sdk"
+)
+
+func SendTextRequest(prompt string) error {
+	textSdk := sdk.GetSdkText()
+
+	_, err := textSdk.SendRequest(prompt)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

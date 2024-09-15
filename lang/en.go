@@ -5,8 +5,8 @@ var EN_STRINGS = LangString{
 	"output-desc":      "Output directory",
 	"output-dir-empty": "Output directory is empty",
 	"silent":           "Disable printing log to stdout",
-	"hello-world":      "Hello, world %s\n",
 	"no-args":          "No arguments provided",
 	"no-command":       "No command provided",
 	"text-usage":       "Generate text from a prompt",
+	"unknown-sdk":      "Unknown sdk \"%s\"",
 }

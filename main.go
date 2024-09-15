@@ -7,6 +7,7 @@ import (
 	"github.com/LordPax/aicli/commands"
 	"github.com/LordPax/aicli/config"
 	"github.com/LordPax/aicli/lang"
+	"github.com/LordPax/aicli/sdk"
 	"github.com/LordPax/aicli/utils"
 
 	cli "github.com/urfave/cli/v2"
@@ -37,6 +38,11 @@ func main() {
 	l.AddStrings(&lang.EN_STRINGS, "en_US.UTF-8", "en_GB.UTF-8", "en")
 	l.AddStrings(&lang.FR_STRINGS, "fr_FR.UTF-8", "fr_CA.UTF-8", "fr")
 
+	if err := sdk.InitSdk(); err != nil {
+		log.PrintfErr("%v\n", err)
+		os.Exit(1)
+	}
+
 	app := cli.NewApp()
 	app.Name = config.NAME
 	app.Usage = l.Get("usage")
@@ -45,6 +51,7 @@ func main() {
 	app.Flags = commands.MainFlags()
 	app.Commands = []*cli.Command{
 		commands.TextCommand(),
+		// TODO : add command for image, audio and translate
 	}
 
 	if err := app.Run(os.Args); err != nil {

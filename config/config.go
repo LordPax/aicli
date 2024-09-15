@@ -18,11 +18,11 @@ var (
 	CONFIG_DIR     = path.Join(home, ".config", "aicli")
 	CONFIG_FILE    = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE       = path.Join(CONFIG_DIR, "log")
+	HISTORY_FILE   = path.Join(CONFIG_DIR, "history.json")
 	CONFIG_INI     *ini.File
 	CONFIG_EXEMPLE = `# Configuration file for aicli
 [text]
 type=openai
-route=https://api.openai.com/v1
 model=gpt4
 api_key=yoursecretapikey
 temp=0.7`
@@ -55,6 +55,13 @@ func InitConfig() error {
 			return err
 		}
 		fmt.Printf("Log file created at %s\n", LOG_FILE)
+	}
+
+	if !utils.FileExist(HISTORY_FILE) {
+		if _, err := os.Create(HISTORY_FILE); err != nil {
+			return err
+		}
+		fmt.Printf("History file created at %s\n", HISTORY_FILE)
 	}
 
 	os.Setenv("LOG_FILE", LOG_FILE)

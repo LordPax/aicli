@@ -5,7 +5,6 @@ import (
 
 	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/service"
-	"github.com/LordPax/aicli/utils"
 
 	cli "github.com/urfave/cli/v2"
 )
@@ -23,19 +22,15 @@ func TextCommand() *cli.Command {
 
 func testAction(c *cli.Context) error {
 	l := lang.GetLocalize()
-	log, _ := utils.GetLog()
 
 	if c.NArg() == 0 {
 		return fmt.Errorf(l.Get("no-args"))
 	}
 
 	prompt := c.Args().First()
-	response, err := service.SendTextRequest(prompt)
-	if err != nil {
+	if err := service.SendTextRequest(prompt); err != nil {
 		return err
 	}
-
-	log.Printf(l.Get("hello-world"), response)
 
 	return nil
 }
