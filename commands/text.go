@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"errors"
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -60,26 +60,44 @@ func TextFlags() []cli.Flag {
 				return nil
 			},
 		},
-		&cli.StringFlag{
+		&cli.StringSliceFlag{
 			Name:    "system",
 			Aliases: []string{"s"},
 			Usage:   l.Get("text-system-usage"),
-			Action: func(c *cli.Context, value string) error {
-				if value == "-" {
-					stdin, err := io.ReadAll(os.Stdin)
+			Action: func(c *cli.Context, values []string) error {
+				for _, value := range values {
+					if value == "-" {
+						stdin, err := io.ReadAll(os.Stdin)
+						if err != nil {
+							return err
+						}
+
+						value = string(stdin)
+					}
+
+					textSdk.AppendHistory("system", value)
+				}
+
+				return nil
+			},
+		},
+		&cli.StringSliceFlag{
+			Name:    "file",
+			Aliases: []string{"f"},
+			Usage:   l.Get("text-file-usage"),
+			Action: func(c *cli.Context, files []string) error {
+				for _, file := range files {
+					f, err := os.ReadFile(file)
 					if err != nil {
 						return err
 					}
 
-					value = string(stdin)
-				}
+					if len(f) == 0 {
+						return fmt.Errorf(l.Get("empty-file"), file)
+					}
 
-				message := sdk.Message{
-					Role:    "system",
-					Content: value,
+					textSdk.AppendHistory("system", string(f))
 				}
-
-				textSdk.AppendHistory(message)
 
 				return nil
 			},
@@ -97,19 +115,30 @@ func TextFlags() []cli.Flag {
 				return nil
 			},
 		},
+		&cli.BoolFlag{
+			Name:    "list-history",
+			Aliases: []string{"l"},
+			Usage:   l.Get("text-list-history-usage"),
+			Action: func(c *cli.Context, value bool) error {
+				if err := service.ListHistory(true, true); err != nil {
+					return err
+				}
+				os.Exit(0)
+				return nil
+			},
+		},
 	}
 }
 
 func textAction(c *cli.Context) error {
-	l := lang.GetLocalize()
-
 	if c.NArg() == 0 {
-		return errors.New(l.Get("no-args"))
+		if err := service.InteractiveMode(); err != nil {
+			return err
+		}
+		return nil
 	}
 
-	prompt := c.Args().First()
-
-	if err := service.SendTextRequest(prompt); err != nil {
+	if err := service.SendTextRequest(c.Args().First()); err != nil {
 		return err
 	}
 

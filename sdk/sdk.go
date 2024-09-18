@@ -8,7 +8,7 @@ import (
 	"github.com/LordPax/aicli/lang"
 )
 
-var sdkTextInstance ISdkText
+var sdkTextInstance ITextService
 
 type ISdk interface {
 	SendRequest(text string) (Message, error)
@@ -30,10 +30,6 @@ func (s *Sdk) GetModel() string {
 	return s.Model
 }
 
-// type SdkImage struct {
-// 	Dimenssions string
-// }
-
 func InitSdkText() error {
 	var err error
 
@@ -46,6 +42,8 @@ func InitSdkText() error {
 	switch sdkType {
 	case "openai":
 		sdkTextInstance, err = NewOpenaiText(apiKey, model, temp)
+	case "claude":
+		sdkTextInstance, err = NewClaudeText(apiKey, model, temp)
 	default:
 		return fmt.Errorf(l.Get("unknown-sdk"), sdkType)
 	}
@@ -97,6 +95,6 @@ func InitSdk() error {
 	return nil
 }
 
-func GetSdkText() ISdkText {
+func GetSdkText() ITextService {
 	return sdkTextInstance
 }

@@ -3,25 +3,29 @@ package sdk
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 
 	"github.com/LordPax/aicli/utils"
 )
 
-type OpenaiText struct {
+type ClaudeResponse struct {
+	Role    string    `json:"role"`
+	Content []Content `json:"content"`
+}
+
+type ClaudeText struct {
 	Sdk
 	SdkText
 }
 
-// Initialize OpenaiText struct, inheriting from Sdk and SdkText
-func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
-	sdkService := &OpenaiText{
+// Initialize ClaudeText struct, inheriting from Sdk and SdkText
+func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
+	sdkService := &ClaudeText{
 		Sdk: Sdk{
-			ApiUrl: "https://api.openai.com/v1/chat/completions",
+			ApiUrl: "https://api.anthropic.com/v1/messages",
 			ApiKey: apiKey,
-			Model:  "gpt-4",
+			Model:  "claude-3-5-sonnet-20240620",
 		},
 		SdkText: SdkText{
 			History:         make(map[string][]Message),
@@ -45,29 +49,24 @@ func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
 	return sdkService, nil
 }
 
-func (o *OpenaiText) SendRequest(text string) (Message, error) {
-	var textResponse TextResponse
+func (c *ClaudeText) SendRequest(text string) (Message, error) {
+	var textResponse ClaudeResponse
 
-	message := Message{
-		Role:    "user",
-		Content: text,
-	}
+	c.AppendHistory("user", text)
 
-	o.AppendHistory(message)
-
-	body := TextBody{
-		Model:    o.Model,
-		Messages: o.GetHistory(),
-	}
-
-	jsonBody, err := json.Marshal(body)
+	jsonBody, err := json.Marshal(TextBody{
+		Model: c.Model,
+		// MaxTokens: 1024,
+		Messages: c.GetHistory(),
+	})
 	if err != nil {
 		return Message{}, err
 	}
 
-	resp, err := utils.PostRequest(o.ApiUrl, jsonBody, map[string]string{
-		"Content-Type":  "application/json",
-		"Authorization": fmt.Sprintf("Bearer %s", o.ApiKey),
+	resp, err := utils.PostRequest(c.ApiUrl, jsonBody, map[string]string{
+		"Content-Type":      "application/json",
+		"anthropic-version": "2023-06-01",
+		"x-api-key":         c.ApiKey,
 	})
 	if err != nil {
 		return Message{}, err
@@ -91,10 +90,9 @@ func (o *OpenaiText) SendRequest(text string) (Message, error) {
 		return Message{}, err
 	}
 
-	respMessage := textResponse.Choices[0].Message
-	o.AppendHistory(respMessage)
+	respMessage := c.AppendHistory(textResponse.Role, textResponse.Content[0].Text)
 
-	if err := o.SaveHistory(); err != nil {
+	if err := c.SaveHistory(); err != nil {
 		return Message{}, err
 	}
 

@@ -1,9 +1,19 @@
 package utils
 
 import (
+	"bufio"
 	"bytes"
+	"fmt"
 	"net/http"
 	"os"
+)
+
+const (
+	Escape = "\x1b"
+	Reset  = Escape + "[0m"
+	Red    = Escape + "[31m"
+	Green  = Escape + "[32m"
+	Blue   = Escape + "[34m"
 )
 
 func FileExist(file string) bool {
@@ -31,4 +41,26 @@ func PostRequest(url string, data []byte, option map[string]string) (*http.Respo
 		return nil, err
 	}
 	return resp, nil
+}
+
+func Input(prompt string, defaultVal string, nullable bool) string {
+	if defaultVal != "" {
+		prompt = fmt.Sprintf("[%s] %s", defaultVal, prompt)
+	}
+
+	fmt.Print(prompt)
+
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	text := scanner.Text()
+
+	if text == "" && defaultVal != "" {
+		return defaultVal
+	}
+
+	if text == "" && !nullable {
+		return Input(prompt, defaultVal, nullable)
+	}
+
+	return text
 }

@@ -7,23 +7,26 @@ import (
 	"github.com/LordPax/aicli/config"
 )
 
+type Content struct {
+	Type   string `json:"type"`
+	Text   string `json:"text"`
+	Source struct {
+		Type      string `json:"type"`
+		MediaType string `json:"media_type"`
+		Data      string `json:"data"`
+	} `json:"source"`
+}
+
 type Message struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
+	// Content []Content `json:"content"`
 }
 
 type TextBody struct {
-	Model    string    `json:"model"`
+	Model string `json:"model"`
+	// MaxTokens int64     `json:"max_tokens"`
 	Messages []Message `json:"messages"`
-}
-
-type TextResponse struct {
-	Choices Choices `json:"choices"`
-}
-
-type Choices []struct {
-	Index   int64   `json:"index"`
-	Message Message `json:"message"`
 }
 
 type ErrorMsg struct {
@@ -32,12 +35,15 @@ type ErrorMsg struct {
 	} `json:"error"`
 }
 
-type ISdkText interface {
+type ITextService interface {
 	ISdk
+	ISdkText
+}
 
+type ISdkText interface {
 	SetTemp(temp float64)
 	GetTemp() float64
-	AppendHistory(text Message)
+	AppendHistory(role, text string) Message
 	SaveHistory() error
 	LoadHistory() error
 	GetHistory() []Message
@@ -68,9 +74,21 @@ func (s *SdkText) GetTemp() float64 {
 	return s.Temp
 }
 
-func (s *SdkText) AppendHistory(text Message) {
+func (s *SdkText) AppendHistory(role, text string) Message {
 	name := s.SelectedHistory
-	s.History[name] = append(s.History[name], text)
+	message := Message{
+		Role:    role,
+		Content: text,
+		// Content: []Content{
+		// 	{
+		// 		Type: "text",
+		// 		Text: text,
+		// 	},
+		// },
+	}
+	s.History[name] = append(s.History[name], message)
+
+	return message
 }
 
 func (s *SdkText) SaveHistory() error {

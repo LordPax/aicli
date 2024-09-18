@@ -13,14 +13,15 @@ import (
 var home, _ = os.UserHomeDir()
 
 var (
-	NAME           = "aicli"
-	VERSION        = "1.0.0"
-	CONFIG_DIR     = path.Join(home, ".config", "aicli")
-	CONFIG_FILE    = path.Join(CONFIG_DIR, "config.ini")
-	LOG_FILE       = path.Join(CONFIG_DIR, "log")
-	HISTORY_FILE   = path.Join(CONFIG_DIR, "history.json")
-	CONFIG_INI     *ini.File
-	CONFIG_EXEMPLE = `
+	NAME            = "aicli"
+	VERSION         = "1.0.0"
+	CONFIG_DIR      = path.Join(home, ".config", "aicli")
+	CONFIG_FILE     = path.Join(CONFIG_DIR, "config.ini")
+	LOG_FILE        = path.Join(CONFIG_DIR, "log")
+	HISTORY_FILE    = path.Join(CONFIG_DIR, "history.json")
+	HISTORY_CONTENT = "{ \"default\": [] }"
+	CONFIG_INI      *ini.File
+	CONFIG_EXEMPLE  = `
 [text]
 type=openai
 model=gpt-4
@@ -58,7 +59,7 @@ func InitConfig() error {
 	}
 
 	if !utils.FileExist(HISTORY_FILE) {
-		if _, err := os.Create(HISTORY_FILE); err != nil {
+		if err := os.WriteFile(HISTORY_FILE, []byte(HISTORY_CONTENT), 0644); err != nil {
 			return err
 		}
 		fmt.Printf("History file created at %s\n", HISTORY_FILE)
