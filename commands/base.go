@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/utils"
@@ -32,5 +32,5 @@ func MainFlags() []cli.Flag {
 
 func MainAction(c *cli.Context) error {
 	l := lang.GetLocalize()
-	return fmt.Errorf(l.Get("no-command"))
+	return errors.New(l.Get("no-command"))
 }

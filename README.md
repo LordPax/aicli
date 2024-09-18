@@ -1,16 +1,16 @@
-# Cli template
+# Aicli
 
 ## Description
 
-This is a cli template for golang project
+Projet to use ai api to generate text, image, etc.
 
 ## Build and install
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/LordPax/cli-template.git
-cd cli-template
+git clone https://github.com/LordPax/aicli.git
+cd aicli
 ```
 
 2. Build the project:
@@ -23,8 +23,8 @@ go build
 
 3. Execute the script to generate config
 
-Will generate a config file at `~/.config/cli-template/config`
+Will generate a config file at `~/.config/aicli/config.ini`
 
 ```bash
-./cli-template
+./aicli
 ```

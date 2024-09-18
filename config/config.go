@@ -13,18 +13,18 @@ import (
 var home, _ = os.UserHomeDir()
 
 var (
-	NAME           = "ai"
+	NAME           = "aicli"
 	VERSION        = "1.0.0"
 	CONFIG_DIR     = path.Join(home, ".config", "aicli")
 	CONFIG_FILE    = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE       = path.Join(CONFIG_DIR, "log")
 	HISTORY_FILE   = path.Join(CONFIG_DIR, "history.json")
 	CONFIG_INI     *ini.File
-	CONFIG_EXEMPLE = `# Configuration file for aicli
+	CONFIG_EXEMPLE = `
 [text]
 type=openai
-model=gpt4
-api_key=yoursecretapikey
+model=gpt-4
+apiKey=yoursecretapikey
 temp=0.7`
 )
 
