@@ -14,6 +14,16 @@ type ClaudeResponse struct {
 	Content []Content `json:"content"`
 }
 
+func (c *ClaudeResponse) GetContent() string {
+	return c.Content[0].Text
+}
+
+type ClaudeBody struct {
+	Model     string    `json:"model"`
+	MaxTokens int64     `json:"max_tokens"`
+	Messages  []Message `json:"messages"`
+}
+
 type ClaudeText struct {
 	Sdk
 	SdkText
@@ -54,10 +64,10 @@ func (c *ClaudeText) SendRequest(text string) (Message, error) {
 
 	c.AppendHistory("user", text)
 
-	jsonBody, err := json.Marshal(TextBody{
-		Model: c.Model,
-		// MaxTokens: 1024,
-		Messages: c.GetHistory(),
+	jsonBody, err := json.Marshal(ClaudeBody{
+		Model:     c.Model,
+		MaxTokens: 1024,
+		Messages:  c.GetHistory(),
 	})
 	if err != nil {
 		return Message{}, err
@@ -90,7 +100,7 @@ func (c *ClaudeText) SendRequest(text string) (Message, error) {
 		return Message{}, err
 	}
 
-	respMessage := c.AppendHistory(textResponse.Role, textResponse.Content[0].Text)
+	respMessage := c.AppendHistory(textResponse.Role, textResponse.GetContent())
 
 	if err := c.SaveHistory(); err != nil {
 		return Message{}, err

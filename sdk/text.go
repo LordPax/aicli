@@ -8,25 +8,22 @@ import (
 )
 
 type Content struct {
-	Type   string `json:"type"`
-	Text   string `json:"text"`
-	Source struct {
-		Type      string `json:"type"`
-		MediaType string `json:"media_type"`
-		Data      string `json:"data"`
-	} `json:"source"`
+	Type string `json:"type"`
+	Text string `json:"text"`
+	// Source struct {
+	// 	Type      string `json:"type"`
+	// 	MediaType string `json:"media_type"`
+	// 	Data      string `json:"data"`
+	// } `json:"source"`
 }
 
 type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-	// Content []Content `json:"content"`
+	Role    string    `json:"role"`
+	Content []Content `json:"content"`
 }
 
-type TextBody struct {
-	Model string `json:"model"`
-	// MaxTokens int64     `json:"max_tokens"`
-	Messages []Message `json:"messages"`
+func (m *Message) GetContent() string {
+	return m.Content[0].Text
 }
 
 type ErrorMsg struct {
@@ -43,7 +40,7 @@ type ITextService interface {
 type ISdkText interface {
 	SetTemp(temp float64)
 	GetTemp() float64
-	AppendHistory(role, text string) Message
+	AppendHistory(role string, text ...string) Message
 	SaveHistory() error
 	LoadHistory() error
 	GetHistory() []Message
@@ -74,17 +71,20 @@ func (s *SdkText) GetTemp() float64 {
 	return s.Temp
 }
 
-func (s *SdkText) AppendHistory(role, text string) Message {
+func (s *SdkText) AppendHistory(role string, text ...string) Message {
+	var content []Content
+
+	for _, t := range text {
+		content = append(content, Content{
+			Type: "text",
+			Text: t,
+		})
+	}
+
 	name := s.SelectedHistory
 	message := Message{
 		Role:    role,
-		Content: text,
-		// Content: []Content{
-		// 	{
-		// 		Type: "text",
-		// 		Text: text,
-		// 	},
-		// },
+		Content: content,
 	}
 	s.History[name] = append(s.History[name], message)
 

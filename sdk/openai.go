@@ -14,8 +14,22 @@ type OpenaiResponse struct {
 }
 
 type Choices []struct {
-	Index   int64   `json:"index"`
-	Message Message `json:"message"`
+	Index   int64          `json:"index"`
+	Message ChoicesMessage `json:"message"`
+}
+
+type ChoicesMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+func (m *ChoicesMessage) GetContent() string {
+	return m.Content
+}
+
+type OpenaiBody struct {
+	Model    string    `json:"model"`
+	Messages []Message `json:"messages"`
 }
 
 type OpenaiText struct {
@@ -58,7 +72,7 @@ func (o *OpenaiText) SendRequest(text string) (Message, error) {
 
 	o.AppendHistory("user", text)
 
-	jsonBody, err := json.Marshal(TextBody{
+	jsonBody, err := json.Marshal(OpenaiBody{
 		Model:    o.Model,
 		Messages: o.GetHistory(),
 	})
@@ -93,7 +107,7 @@ func (o *OpenaiText) SendRequest(text string) (Message, error) {
 	}
 
 	msg := textResponse.Choices[0].Message
-	respMessage := o.AppendHistory(msg.Role, msg.Content)
+	respMessage := o.AppendHistory(msg.Role, msg.GetContent())
 
 	if err := o.SaveHistory(); err != nil {
 		return Message{}, err

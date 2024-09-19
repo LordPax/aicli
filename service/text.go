@@ -27,8 +27,7 @@ func SendTextRequest(prompt string) error {
 		return err
 	}
 
-	// fmt.Println(resp.Content[0].Text)
-	fmt.Println(resp.Content)
+	fmt.Println(resp.GetContent())
 
 	return nil
 }
@@ -54,8 +53,7 @@ func InteractiveMode() error {
 
 		fmt.Print("\n")
 		fmt.Println(utils.Red + resp.Role + ">" + utils.Reset)
-		// fmt.Println(resp.Content[0].Text)
-		fmt.Println(resp.Content)
+		fmt.Println(resp.GetContent())
 		fmt.Print("\n")
 	}
 
@@ -93,8 +91,7 @@ func ListHistory(showSystem, showMsg bool) error {
 			fmt.Println(utils.Red + "assistant> " + utils.Reset)
 		}
 
-		// fmt.Println(message.Content[0].Text)
-		fmt.Println(message.Content)
+		fmt.Println(message.GetContent())
 		fmt.Print("\n")
 	}
 

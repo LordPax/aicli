@@ -65,6 +65,8 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"s"},
 			Usage:   l.Get("text-system-usage"),
 			Action: func(c *cli.Context, values []string) error {
+				var content []string
+
 				for _, value := range values {
 					if value == "-" {
 						stdin, err := io.ReadAll(os.Stdin)
@@ -75,8 +77,10 @@ func TextFlags() []cli.Flag {
 						value = string(stdin)
 					}
 
-					textSdk.AppendHistory("system", value)
+					content = append(content, value)
 				}
+
+				textSdk.AppendHistory("system", content...)
 
 				return nil
 			},
@@ -86,6 +90,8 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"f"},
 			Usage:   l.Get("text-file-usage"),
 			Action: func(c *cli.Context, files []string) error {
+				var fileContent []string
+
 				for _, file := range files {
 					f, err := os.ReadFile(file)
 					if err != nil {
@@ -96,8 +102,10 @@ func TextFlags() []cli.Flag {
 						return fmt.Errorf(l.Get("empty-file"), file)
 					}
 
-					textSdk.AppendHistory("system", string(f))
+					fileContent = append(fileContent, string(f))
 				}
+
+				textSdk.AppendHistory("system", fileContent...)
 
 				return nil
 			},
