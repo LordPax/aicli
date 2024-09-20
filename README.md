@@ -47,7 +47,7 @@ apiKey=yoursecretapikey
 temp=0.7
 ```
 
-With type as prefix, parameter will be specific for this type, if there is no type, parameter will be global
+With type as prefix, parameter will be specific for this type, if there is no prefix, parameter will be global
 
 ```ini
 [text]
