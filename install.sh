@@ -3,14 +3,14 @@
 [ "$EUID" -ne 0 ] && echo "Please run as root" && exit 1
 
 function installFunc() {
-	[ ! -f scan2epub ] && echo "ai not found" && exit 1
-	echo "Installing ai to /usr/bin/ai"
-	install -Dm 755 scan2epub /usr/bin/scan2epub
+	[ ! -f aicli ] && echo "aicli not found" && exit 1
+	echo "Installing aicli to /usr/bin/aicli"
+	install -Dm 755 aicli /usr/bin/aicli
 }
 
 function uninstall() {
-	echo "Uninstalling ai from /usr/bin/ai"
-	rm -f /usr/bin/scan2epub
+	echo "Uninstalling aicli from /usr/bin/aicli"
+	rm -f /usr/bin/aicli
 }
 
 case "$1" in
