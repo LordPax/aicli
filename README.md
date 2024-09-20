@@ -77,7 +77,7 @@ Add the following line to your `.vimrc`:
 Plug 'LordPax/vim-aigpt'
 ```
 
-### Integration with i3
+## Integration with i3
 
 Add the following line to your `~/.config/i3/config`:
 
