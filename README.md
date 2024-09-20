@@ -6,7 +6,7 @@ Projet to use ai api to generate text, image, etc.
 
 ## To do
 
-- [-] Faire command text
+- [ ] Faire command text
 - [ ] Faire command translate
 - [ ] Faire command image
 - [ ] Faire command speech
