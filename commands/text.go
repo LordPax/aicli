@@ -48,7 +48,8 @@ func TextFlags() []cli.Flag {
 			Usage:       l.Get("text-history-usage"),
 			DefaultText: textSdk.GetSelectedHistory(),
 			Action: func(c *cli.Context, value string) error {
-				textSdk.SetSelectedHistory(value)
+				text := sdk.GetSdkText()
+				text.SetSelectedHistory(value)
 				return nil
 			},
 		},
@@ -58,7 +59,8 @@ func TextFlags() []cli.Flag {
 			Usage:       l.Get("sdk-model-usage"),
 			DefaultText: textSdk.GetModel(),
 			Action: func(c *cli.Context, value string) error {
-				textSdk.SetModel(value)
+				text := sdk.GetSdkText()
+				text.SetModel(value)
 				return nil
 			},
 		},
@@ -68,7 +70,8 @@ func TextFlags() []cli.Flag {
 			Usage:       l.Get("text-temp-usage"),
 			DefaultText: strconv.FormatFloat(textSdk.GetTemp(), 'f', -1, 64),
 			Action: func(c *cli.Context, value float64) error {
-				textSdk.SetTemp(value)
+				text := sdk.GetSdkText()
+				text.SetTemp(value)
 				return nil
 			},
 		},
@@ -77,6 +80,7 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"s"},
 			Usage:   l.Get("text-system-usage"),
 			Action: func(c *cli.Context, values []string) error {
+				text := sdk.GetSdkText()
 				var content []string
 
 				for _, value := range values {
@@ -92,7 +96,7 @@ func TextFlags() []cli.Flag {
 					content = append(content, value)
 				}
 
-				textSdk.AppendHistory("system", content...)
+				text.AppendHistory("system", content...)
 
 				return nil
 			},
@@ -102,6 +106,7 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"f"},
 			Usage:   l.Get("text-file-usage"),
 			Action: func(c *cli.Context, files []string) error {
+				text := sdk.GetSdkText()
 				var fileContent []string
 
 				for _, file := range files {
@@ -117,7 +122,7 @@ func TextFlags() []cli.Flag {
 					fileContent = append(fileContent, string(f))
 				}
 
-				textSdk.AppendHistory("system", fileContent...)
+				text.AppendHistory("system", fileContent...)
 
 				return nil
 			},
@@ -127,8 +132,9 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"c"},
 			Usage:   l.Get("text-clear-usage"),
 			Action: func(c *cli.Context, value bool) error {
-				textSdk.ClearHistory()
-				if err := textSdk.SaveHistory(); err != nil {
+				text := sdk.GetSdkText()
+				text.ClearHistory()
+				if err := text.SaveHistory(); err != nil {
 					return err
 				}
 				os.Exit(0)
