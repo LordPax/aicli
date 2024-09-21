@@ -68,7 +68,14 @@ func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
 func (c *ClaudeText) SendRequest(text string) (Message, error) {
 	var textResponse ClaudeResponse
 
-	c.AppendHistory("user", text)
+	idLastMsg := len(c.GetHistory()) - 1
+	lastMessage := c.GetMessage(idLastMsg)
+
+	if lastMessage != nil && lastMessage.Role == "user" {
+		c.AppendMessage(idLastMsg, text)
+	} else {
+		c.AppendHistory("user", text)
+	}
 
 	jsonBody, err := json.Marshal(ClaudeBody{
 		Model:     c.Model,
@@ -113,4 +120,28 @@ func (c *ClaudeText) SendRequest(text string) (Message, error) {
 	}
 
 	return respMessage, nil
+}
+
+func (c *ClaudeText) AppendHistory(role string, text ...string) Message {
+	var content []Content
+	name := c.SelectedHistory
+
+	if role == "system" {
+		role = "user"
+	}
+
+	for _, t := range text {
+		content = append(content, Content{
+			Type: "text",
+			Text: t,
+		})
+	}
+
+	message := Message{
+		Role:    role,
+		Content: content,
+	}
+	c.History[name] = append(c.History[name], message)
+
+	return message
 }

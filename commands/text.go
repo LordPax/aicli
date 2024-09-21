@@ -146,7 +146,7 @@ func TextFlags() []cli.Flag {
 			Aliases: []string{"l"},
 			Usage:   l.Get("text-list-history-usage"),
 			Action: func(c *cli.Context, value bool) error {
-				if err := service.ListHistory(true, true); err != nil {
+				if err := service.ListHistory(true); err != nil {
 					return err
 				}
 				os.Exit(0)

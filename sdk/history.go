@@ -17,6 +17,8 @@ type ITextHistory interface {
 	SetSelectedHistory(name string)
 	GetSelectedHistory() string
 	ClearHistory()
+	GetMessage(index int) *Message
+	AppendMessage(index int, text ...string)
 }
 
 type TextHistory struct {
@@ -58,6 +60,7 @@ func (t *TextHistory) GetSelectedHistory() string {
 
 func (t *TextHistory) AppendHistory(role string, text ...string) Message {
 	var content []Content
+	name := t.SelectedHistory
 
 	for _, t := range text {
 		content = append(content, Content{
@@ -66,7 +69,6 @@ func (t *TextHistory) AppendHistory(role string, text ...string) Message {
 		})
 	}
 
-	name := t.SelectedHistory
 	message := Message{
 		Role:    role,
 		Content: content,
@@ -120,4 +122,26 @@ func (t *TextHistory) ClearHistory() {
 func (t *TextHistory) GetHistory() []Message {
 	name := t.SelectedHistory
 	return t.History[name]
+}
+
+func (t *TextHistory) GetMessage(index int) *Message {
+	if index < 0 {
+		return nil
+	}
+	name := t.SelectedHistory
+	return &t.History[name][index]
+}
+
+func (t *TextHistory) AppendMessage(index int, text ...string) {
+	name := t.SelectedHistory
+	message := t.GetMessage(index)
+
+	for _, t := range text {
+		message.Content = append(message.Content, Content{
+			Type: "text",
+			Text: t,
+		})
+	}
+
+	t.History[name][index] = *message
 }

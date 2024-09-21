@@ -16,7 +16,20 @@ type Message struct {
 }
 
 func (m *Message) GetContent() string {
-	return m.Content[0].Text
+	var text string
+
+	if len(m.Content) == 1 {
+		return m.Content[0].Text
+	}
+
+	for _, c := range m.Content {
+		if c.Type != "text" {
+			continue
+		}
+		text += "\n" + c.Text + "\n"
+	}
+
+	return text
 }
 
 type ErrorMsg struct {

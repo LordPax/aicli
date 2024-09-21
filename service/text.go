@@ -36,7 +36,7 @@ func InteractiveMode() error {
 	textSdk := sdk.GetSdkText()
 	l := lang.GetLocalize()
 
-	if err := ListHistory(false, false); err != nil {
+	if err := ListHistory(false); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func InteractiveMode() error {
 	return nil
 }
 
-func ListHistory(showSystem, showMsg bool) error {
+func ListHistory(showMsg bool) error {
 	textSdk := sdk.GetSdkText()
 	l := lang.GetLocalize()
 	log, err := utils.GetLog()
@@ -77,10 +77,6 @@ func ListHistory(showSystem, showMsg bool) error {
 
 	for _, message := range history {
 		role := message.Role
-
-		if role == "system" && !showSystem {
-			continue
-		}
 
 		switch role {
 		case "user":

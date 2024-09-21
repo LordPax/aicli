@@ -6,11 +6,11 @@ Projet to use ai api to generate text, image, etc.
 
 ## To do
 
-- [ ] Faire command text
-- [ ] Faire command translate
-- [ ] Faire command image
-- [ ] Faire command speech
-- [ ] Faire command tts
+- [x] command text
+- [ ] command translate
+- [ ] command image
+- [ ] command speech
+- [ ] command tts
 
 ## Build and install
 
