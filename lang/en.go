@@ -12,6 +12,7 @@ var EN_STRINGS = LangString{
 	"unknown-sdk":             "Unknown sdk \"%s\"",
 	"sdk-model-usage":         "Select a model",
 	"text-usage":              "Generate text from a prompt",
+	"text-sdk-usage":          "Select a sdk",
 	"text-temp-usage":         "Set temperature",
 	"text-system-usage":       "Instruction with role system (use \"-\" for stdin)",
 	"text-history-usage":      "Select a history",

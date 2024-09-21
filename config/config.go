@@ -18,7 +18,6 @@ var (
 	CONFIG_DIR      = path.Join(home, ".config", "aicli")
 	CONFIG_FILE     = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE        = path.Join(CONFIG_DIR, "log")
-	HISTORY_FILE    = path.Join(CONFIG_DIR, "history.json")
 	HISTORY_CONTENT = "{ \"default\": [] }"
 	CONFIG_INI      *ini.File
 	CONFIG_EXEMPLE  = `
@@ -56,13 +55,6 @@ func InitConfig() error {
 			return err
 		}
 		fmt.Printf("Log file created at %s\n", LOG_FILE)
-	}
-
-	if !utils.FileExist(HISTORY_FILE) {
-		if err := os.WriteFile(HISTORY_FILE, []byte(HISTORY_CONTENT), 0644); err != nil {
-			return err
-		}
-		fmt.Printf("History file created at %s\n", HISTORY_FILE)
 	}
 
 	os.Setenv("LOG_FILE", LOG_FILE)

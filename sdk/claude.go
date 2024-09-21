@@ -27,21 +27,27 @@ type ClaudeBody struct {
 type ClaudeText struct {
 	Sdk
 	SdkText
+	TextHistory
 }
 
 // Initialize ClaudeText struct, inheriting from Sdk and SdkText
 func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
+	history, err := NewTextHistory("claude")
+	if err != nil {
+		return nil, err
+	}
+
 	sdkService := &ClaudeText{
 		Sdk: Sdk{
+			Name:   "claude",
 			ApiUrl: "https://api.anthropic.com/v1/messages",
 			ApiKey: apiKey,
 			Model:  "claude-3-5-sonnet-20240620",
 		},
 		SdkText: SdkText{
-			History:         make(map[string][]Message),
-			SelectedHistory: "default",
-			Temp:            0.7,
+			Temp: 0.7,
 		},
+		TextHistory: *history,
 	}
 
 	if model != "" {

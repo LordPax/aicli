@@ -31,6 +31,18 @@ func TextFlags() []cli.Flag {
 
 	return []cli.Flag{
 		&cli.StringFlag{
+			Name:        "sdk",
+			Aliases:     []string{"S"},
+			Usage:       l.Get("text-sdk-usage"),
+			DefaultText: textSdk.GetName(),
+			Action: func(c *cli.Context, value string) error {
+				if err := sdk.InitSdkText(value); err != nil {
+					return err
+				}
+				return nil
+			},
+		},
+		&cli.StringFlag{
 			Name:        "history",
 			Aliases:     []string{"H"},
 			Usage:       l.Get("text-history-usage"),

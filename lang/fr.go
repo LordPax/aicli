@@ -12,6 +12,7 @@ var FR_STRINGS = LangString{
 	"unknown-sdk":             "Sdk inconnu \"%s\"",
 	"sdk-model-usage":         "Sélectionner un modèle",
 	"text-usage":              "Générer du texte à partir d'un prompt",
+	"text-sdk-usage":          "Sélectionner un sdk",
 	"text-temp-usage":         "Définir la température",
 	"text-system-usage":       "Instruction avec rôle système (utilisez \"-\" pour stdin)",
 	"text-history-usage":      "Sélectionner un historique",

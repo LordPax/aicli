@@ -35,21 +35,27 @@ type OpenaiBody struct {
 type OpenaiText struct {
 	Sdk
 	SdkText
+	TextHistory
 }
 
 // Initialize OpenaiText struct, inheriting from Sdk and SdkText
 func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
+	history, err := NewTextHistory("openai")
+	if err != nil {
+		return nil, err
+	}
+
 	sdkService := &OpenaiText{
 		Sdk: Sdk{
+			Name:   "openai",
 			ApiUrl: "https://api.openai.com/v1/chat/completions",
 			ApiKey: apiKey,
 			Model:  "gpt-4",
 		},
 		SdkText: SdkText{
-			History:         make(map[string][]Message),
-			SelectedHistory: "default",
-			Temp:            0.7,
+			Temp: 0.7,
 		},
+		TextHistory: *history,
 	}
 
 	if model != "" {

@@ -14,12 +14,18 @@ type ISdk interface {
 	SendRequest(text string) (Message, error)
 	SetModel(model string)
 	GetModel() string
+	GetName() string
 }
 
 type Sdk struct {
+	Name   string
 	ApiUrl string
 	ApiKey string
 	Model  string
+}
+
+func (s *Sdk) GetName() string {
+	return s.Name
 }
 
 func (s *Sdk) SetModel(model string) {
@@ -30,11 +36,11 @@ func (s *Sdk) GetModel() string {
 	return s.Model
 }
 
-func InitSdkText() error {
+func InitSdkText(sdk string) error {
 	var err error
 
 	l := lang.GetLocalize()
-	sdkType, apiKey, model, temp, err := getConfigText()
+	sdkType, apiKey, model, temp, err := getConfigText(sdk)
 	if err != nil {
 		return err
 	}
@@ -55,13 +61,15 @@ func InitSdkText() error {
 	return nil
 }
 
-func getConfigText() (string, string, string, float64, error) {
+func getConfigText(sdkType string) (string, string, string, float64, error) {
 	l := lang.GetLocalize()
 	confText := config.CONFIG_INI.Section("text")
 
-	sdkType := confText.Key("type").String()
 	if sdkType == "" {
-		return "", "", "", 0, errors.New(l.Get("type-required"))
+		sdkType = confText.Key("type").String()
+		if sdkType == "" {
+			return "", "", "", 0, errors.New(l.Get("type-required"))
+		}
 	}
 
 	apiKey := confText.Key("apiKey").String()
@@ -86,7 +94,7 @@ func getConfigText() (string, string, string, float64, error) {
 }
 
 func InitSdk() error {
-	if err := InitSdkText(); err != nil {
+	if err := InitSdkText(""); err != nil {
 		return err
 	}
 
@@ -97,4 +105,8 @@ func InitSdk() error {
 
 func GetSdkText() ITextService {
 	return sdkTextInstance
+}
+
+func SetSdkText(s ITextService) {
+	sdkTextInstance = s
 }

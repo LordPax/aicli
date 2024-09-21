@@ -83,6 +83,15 @@ func (l *Log) PrintfErr(format string, a ...any) {
 	}
 }
 
+func (l *Log) Logf(format string, a ...any) {
+	text := fmt.Sprintf(format, a...)
+
+	if err := l.WriteLog(text); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}
+
 func (l *Log) Close() error {
 	return l.file.Close()
 }
