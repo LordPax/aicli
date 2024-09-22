@@ -7,7 +7,7 @@ Projet to use ai api to generate text, image, etc.
 ## To do
 
 - [x] command text
-- [ ] command translate
+- [x] command translate
 - [ ] command image
 - [ ] command speech
 - [ ] command tts
@@ -45,6 +45,10 @@ type=openai
 model=gpt-4
 apiKey=yoursecretapikey
 temp=0.7
+
+[translate]
+type=deepl
+apiKey=yoursecretapikey
 ```
 
 With type as prefix, parameter will be specific for this type, if there is no prefix, parameter will be global
@@ -57,6 +61,10 @@ openai-apiKey=yoursecretapikey
 claude-model=claude-3-5-sonnet-20240620
 claude-apiKey=yoursecretapikey
 temp=0.7
+
+[translate]
+type=deepl
+apiKey=yoursecretapikey
 ```
 
 ## Integration with tmux
