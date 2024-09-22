@@ -43,14 +43,14 @@ func TranslateInteractiveMode() error {
 	translateSdk := sdk.GetSdkTranslate()
 	l := lang.GetLocalize()
 
+	if translateSdk.GetTargetLang() == "" {
+		return errors.New(l.Get("translate-target-required"))
+	}
+
 	for {
 		input := utils.Input(l.Get("translate-input"), "", false)
 		if input == "exit" {
 			break
-		}
-
-		if translateSdk.GetTargetLang() == "" {
-			return errors.New(l.Get("translate-target-required"))
 		}
 
 		resp, err := translateSdk.SendRequest(input)
