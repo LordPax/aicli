@@ -90,5 +90,5 @@ Plug 'LordPax/vim-aigpt'
 Add the following line to your `~/.config/i3/config`:
 
 ```
-bindsym $mod+s exec ~/usr/bin/aicli -c -g speech
+bindsym $mod+s exec /usr/bin/aicli -c -g speech
 ```

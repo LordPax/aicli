@@ -34,21 +34,21 @@ jobs:
       run: go get .
 
     - run: |
-        mkdir cli-template
-        cp README.md install.sh CHANGELOG.md cli-template
+        mkdir aicli
+        cp README.md install.sh CHANGELOG.md aicli
 
     - name: Build
       run: |
-        name="cli-template"
+        name="aicli"
         if [ "${{ matrix.os }}" = "windows" ]; then
           name="${name}.exe"
         fi
-        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os }} go build -o "cli-template/${name}" .
+        GOARCH=${{ matrix.arch }} GOOS=${{ matrix.os }} go build -o "aicli/${name}" .
 
     - name: Archive
       run: |
         tar -czf \
-          cli-template-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz cli-template
+          aicli-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz aicli
 
     - name: Release
       uses: softprops/action-gh-release@v2
@@ -61,4 +61,4 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          cli-template-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
+          aicli-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
