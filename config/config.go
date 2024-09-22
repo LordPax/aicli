@@ -14,7 +14,7 @@ var home, _ = os.UserHomeDir()
 
 var (
 	NAME            = "aicli"
-	VERSION         = "1.0.0"
+	VERSION         = "0.1.0"
 	CONFIG_DIR      = path.Join(home, ".config", "aicli")
 	CONFIG_FILE     = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE        = path.Join(CONFIG_DIR, "log")
@@ -25,7 +25,11 @@ var (
 type=openai
 model=gpt-4
 apiKey=yoursecretapikey
-temp=0.7`
+temp=0.7
+
+[translate]
+type=deepl
+apiKey=yoursecretapikey`
 )
 
 func InitConfig() error {
