@@ -42,10 +42,10 @@ func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
 			Name:   "claude",
 			ApiUrl: "https://api.anthropic.com/v1/messages",
 			ApiKey: apiKey,
-			Model:  "claude-3-5-sonnet-20240620",
 		},
 		SdkText: SdkText{
-			Temp: 0.7,
+			Model: "claude-3-5-sonnet-20240620",
+			Temp:  0.7,
 		},
 		TextHistory: *history,
 	}

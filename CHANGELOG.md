@@ -4,6 +4,8 @@
 
 ### Added
 
+* Add interactive mode for translate command
+* Add sdk deepl for translate command
 * Add interactive mode for text command
 * Add parameter for text command
     * `sdk` : Select the sdk to use

@@ -50,10 +50,10 @@ func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
 			Name:   "openai",
 			ApiUrl: "https://api.openai.com/v1/chat/completions",
 			ApiKey: apiKey,
-			Model:  "gpt-4",
 		},
 		SdkText: SdkText{
-			Temp: 0.7,
+			Model: "gpt-4",
+			Temp:  0.7,
 		},
 		TextHistory: *history,
 	}

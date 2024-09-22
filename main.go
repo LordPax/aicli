@@ -51,6 +51,7 @@ func main() {
 	app.Flags = commands.MainFlags()
 	app.Commands = []*cli.Command{
 		commands.TextCommand(),
+		commands.TranslateCommand(),
 		// TODO : add command for image, audio and translate
 	}
 

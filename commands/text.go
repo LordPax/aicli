@@ -21,11 +21,11 @@ func TextCommand() *cli.Command {
 		ArgsUsage: "[prompt|-]",
 		Aliases:   []string{"t"},
 		Action:    textAction,
-		Flags:     TextFlags(),
+		Flags:     textFlags(),
 	}
 }
 
-func TextFlags() []cli.Flag {
+func textFlags() []cli.Flag {
 	l := lang.GetLocalize()
 	textSdk := sdk.GetSdkText()
 
@@ -33,7 +33,7 @@ func TextFlags() []cli.Flag {
 		&cli.StringFlag{
 			Name:        "sdk",
 			Aliases:     []string{"S"},
-			Usage:       l.Get("text-sdk-usage"),
+			Usage:       l.Get("sdk-usage"),
 			DefaultText: textSdk.GetName(),
 			Action: func(c *cli.Context, value string) error {
 				if err := sdk.InitSdkText(value); err != nil {
