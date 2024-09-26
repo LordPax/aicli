@@ -30,6 +30,7 @@ func (m *ChoicesMessage) GetContent() string {
 type OpenaiBody struct {
 	Model    string    `json:"model"`
 	Messages []Message `json:"messages"`
+	Temp     float64   `json:"temperature"`
 }
 
 type OpenaiText struct {
@@ -81,6 +82,7 @@ func (o *OpenaiText) SendRequest(text string) (Message, error) {
 	jsonBody, err := json.Marshal(OpenaiBody{
 		Model:    o.Model,
 		Messages: o.GetHistory(),
+		Temp:     o.Temp,
 	})
 	if err != nil {
 		return Message{}, err

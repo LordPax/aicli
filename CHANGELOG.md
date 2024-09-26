@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Add parameter -L for text command to list all history name
+* Add sdk mistral for text command
+
+### Changed
+
+* Improve the way we add message to history
+* Improve input function for interactive mode
+
 ## [0.1.0] - 2024-09-22
 
 ### Added

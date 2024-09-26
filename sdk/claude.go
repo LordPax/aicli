@@ -68,19 +68,14 @@ func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
 func (c *ClaudeText) SendRequest(text string) (Message, error) {
 	var textResponse ClaudeResponse
 
-	idLastMsg := len(c.GetHistory()) - 1
-	lastMessage := c.GetMessage(idLastMsg)
+	c.AppendHistory("user", text)
 
-	if lastMessage != nil && lastMessage.Role == "user" {
-		c.AppendMessage(idLastMsg, text)
-	} else {
-		c.AppendHistory("user", text)
-	}
+	test := c.GetHistory()
 
 	jsonBody, err := json.Marshal(ClaudeBody{
 		Model:     c.Model,
 		MaxTokens: 1024,
-		Messages:  c.GetHistory(),
+		Messages:  test,
 	})
 	if err != nil {
 		return Message{}, err
@@ -123,23 +118,23 @@ func (c *ClaudeText) SendRequest(text string) (Message, error) {
 }
 
 func (c *ClaudeText) AppendHistory(role string, text ...string) Message {
-	var content []Content
 	name := c.SelectedHistory
 
 	if role == "system" {
 		role = "user"
 	}
 
-	for _, t := range text {
-		content = append(content, Content{
-			Type: "text",
-			Text: t,
-		})
+	idLastMsg := len(c.GetHistory()) - 1
+	lastMessage := c.GetMessage(idLastMsg)
+
+	// If the last message is from the same role, append the new text to the last message
+	if lastMessage != nil && lastMessage.Role == role {
+		return c.AppendMessage(idLastMsg, text...)
 	}
 
 	message := Message{
 		Role:    role,
-		Content: content,
+		Content: textContent(text...),
 	}
 	c.History[name] = append(c.History[name], message)
 

@@ -128,9 +128,10 @@ func textFlags() []cli.Flag {
 			},
 		},
 		&cli.BoolFlag{
-			Name:    "clear",
-			Aliases: []string{"c"},
-			Usage:   l.Get("text-clear-usage"),
+			Name:               "clear",
+			Aliases:            []string{"c"},
+			Usage:              l.Get("text-clear-usage"),
+			DisableDefaultText: true,
 			Action: func(c *cli.Context, value bool) error {
 				text := sdk.GetSdkText()
 				text.ClearHistory()
@@ -142,12 +143,27 @@ func textFlags() []cli.Flag {
 			},
 		},
 		&cli.BoolFlag{
-			Name:    "list-history",
-			Aliases: []string{"l"},
-			Usage:   l.Get("text-list-history-usage"),
+			Name:               "list-history",
+			Aliases:            []string{"l"},
+			Usage:              l.Get("text-list-history-usage"),
+			DisableDefaultText: true,
 			Action: func(c *cli.Context, value bool) error {
 				if err := service.ListHistory(true); err != nil {
 					return err
+				}
+				os.Exit(0)
+				return nil
+			},
+		},
+		&cli.BoolFlag{
+			Name:               "list-history-name",
+			Aliases:            []string{"L"},
+			Usage:              l.Get("text-list-history-name-usage"),
+			DisableDefaultText: true,
+			Action: func(c *cli.Context, value bool) error {
+				text := sdk.GetSdkText()
+				for _, name := range text.GetHistoryNames() {
+					fmt.Println(name)
 				}
 				os.Exit(0)
 				return nil

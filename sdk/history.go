@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/LordPax/aicli/config"
 	"github.com/LordPax/aicli/utils"
@@ -18,7 +19,8 @@ type ITextHistory interface {
 	GetSelectedHistory() string
 	ClearHistory()
 	GetMessage(index int) *Message
-	AppendMessage(index int, text ...string)
+	AppendMessage(index int, text ...string) Message
+	GetHistoryNames() []string
 }
 
 type TextHistory struct {
@@ -59,19 +61,11 @@ func (t *TextHistory) GetSelectedHistory() string {
 }
 
 func (t *TextHistory) AppendHistory(role string, text ...string) Message {
-	var content []Content
 	name := t.SelectedHistory
-
-	for _, t := range text {
-		content = append(content, Content{
-			Type: "text",
-			Text: t,
-		})
-	}
 
 	message := Message{
 		Role:    role,
-		Content: content,
+		Content: textContent(text...),
 	}
 	t.History[name] = append(t.History[name], message)
 
@@ -132,16 +126,37 @@ func (t *TextHistory) GetMessage(index int) *Message {
 	return &t.History[name][index]
 }
 
-func (t *TextHistory) AppendMessage(index int, text ...string) {
+func (t *TextHistory) AppendMessage(index int, text ...string) Message {
 	name := t.SelectedHistory
 	message := t.GetMessage(index)
 
+	content := textContent(text...)
+	message.Content = append(message.Content, content...)
+
+	t.History[name][index] = *message
+
+	return *message
+}
+
+func (t *TextHistory) GetHistoryNames() []string {
+	var names []string
+
+	for k := range t.History {
+		names = append(names, k)
+	}
+
+	return names
+}
+
+func textContent(text ...string) []Content {
+	var content []Content
+
 	for _, t := range text {
-		message.Content = append(message.Content, Content{
+		content = append(content, Content{
 			Type: "text",
-			Text: t,
+			Text: strings.TrimSpace(t),
 		})
 	}
 
-	t.History[name][index] = *message
+	return content
 }

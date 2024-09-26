@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"bufio"
 	"bytes"
-	"fmt"
 	"net/http"
 	"os"
+	"strings"
+
+	"golang.org/x/term"
 )
 
 const (
@@ -44,23 +45,24 @@ func PostRequest(url string, data []byte, option map[string]string) (*http.Respo
 }
 
 func Input(prompt string, defaultVal string, nullable bool) string {
-	if defaultVal != "" {
-		prompt = fmt.Sprintf("[%s] %s", defaultVal, prompt)
+	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	if err != nil {
+		panic(err)
 	}
+	defer term.Restore(int(os.Stdin.Fd()), oldState)
 
-	fmt.Print(prompt)
+	t := term.NewTerminal(os.Stdin, prompt)
 
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	text := scanner.Text()
+	line, _ := t.ReadLine()
+	line = strings.TrimSpace(line)
 
-	if text == "" && defaultVal != "" {
+	if line == "" && defaultVal != "" {
 		return defaultVal
 	}
 
-	if text == "" && !nullable {
+	if line == "" && !nullable {
 		return Input(prompt, defaultVal, nullable)
 	}
 
-	return text
+	return line
 }

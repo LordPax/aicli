@@ -32,11 +32,14 @@ func (m *Message) GetContent() string {
 		return m.Content[0].Text
 	}
 
-	for _, c := range m.Content {
+	for i, c := range m.Content {
 		if c.Type != "text" {
 			continue
 		}
-		text += "\n" + c.Text + "\n"
+		if i != 0 {
+			text += "\n---\n"
+		}
+		text += c.Text
 	}
 
 	return text
@@ -81,6 +84,8 @@ func InitSdkText(sdk string) error {
 		sdkTextInstance, err = NewOpenaiText(apiKey, model, temp)
 	case "claude":
 		sdkTextInstance, err = NewClaudeText(apiKey, model, temp)
+	case "mistral":
+		sdkTextInstance, err = NewMistralText(apiKey, model, temp)
 	default:
 		return fmt.Errorf(l.Get("unknown-sdk"), sdkType)
 	}
@@ -106,9 +111,6 @@ func getConfigText(sdkType string) (string, string, string, float64, error) {
 	apiKey := confText.Key("apiKey").String()
 	if apiKey == "" {
 		apiKey = confText.Key(sdkType + "-apiKey").String()
-		if apiKey == "" {
-			return "", "", "", 0, errors.New(l.Get("api-key-required"))
-		}
 	}
 
 	model := confText.Key("model").String()
