@@ -42,6 +42,7 @@ func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
 			Name:   "claude",
 			ApiUrl: "https://api.anthropic.com/v1/messages",
 			ApiKey: apiKey,
+			Inerte: false,
 		},
 		SdkText: SdkText{
 			Model: "claude-3-5-sonnet-20240620",
@@ -68,14 +69,21 @@ func NewClaudeText(apiKey, model string, temp float64) (*ClaudeText, error) {
 func (c *ClaudeText) SendRequest(text string) (Message, error) {
 	var textResponse ClaudeResponse
 
-	c.AppendHistory("user", text)
+	if text != "" {
+		c.AppendHistory("user", text)
+	}
 
-	test := c.GetHistory()
+	if c.GetInerte() {
+		if err := c.SaveHistory(); err != nil {
+			return Message{}, err
+		}
+		return Message{}, nil
+	}
 
 	jsonBody, err := json.Marshal(ClaudeBody{
 		Model:     c.Model,
 		MaxTokens: 1024,
-		Messages:  test,
+		Messages:  c.GetHistory(),
 	})
 	if err != nil {
 		return Message{}, err

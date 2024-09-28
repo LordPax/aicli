@@ -13,8 +13,13 @@ import (
 	cli "github.com/urfave/cli/v2"
 )
 
-func TextCommand() *cli.Command {
+func TextCommand() (*cli.Command, error) {
 	l := lang.GetLocalize()
+
+	if err := sdk.InitSdkText(""); err != nil {
+		return nil, err
+	}
+
 	return &cli.Command{
 		Name:      "text",
 		Usage:     l.Get("text-usage"),
@@ -22,7 +27,7 @@ func TextCommand() *cli.Command {
 		Aliases:   []string{"t"},
 		Action:    textAction,
 		Flags:     textFlags(),
-	}
+	}, nil
 }
 
 func textFlags() []cli.Flag {
@@ -35,10 +40,23 @@ func textFlags() []cli.Flag {
 			Aliases:     []string{"S"},
 			Usage:       l.Get("sdk-usage"),
 			DefaultText: textSdk.GetName(),
+			Category:    "global",
 			Action: func(c *cli.Context, value string) error {
 				if err := sdk.InitSdkText(value); err != nil {
 					return err
 				}
+				return nil
+			},
+		},
+		&cli.BoolFlag{
+			Name:               "inerte",
+			Aliases:            []string{"i"},
+			Usage:              l.Get("inerte-usage"),
+			DisableDefaultText: true,
+			Category:           "global",
+			Action: func(c *cli.Context, value bool) error {
+				text := sdk.GetSdkText()
+				text.SetInerte(value)
 				return nil
 			},
 		},
@@ -47,6 +65,7 @@ func textFlags() []cli.Flag {
 			Aliases:     []string{"H"},
 			Usage:       l.Get("text-history-usage"),
 			DefaultText: textSdk.GetSelectedHistory(),
+			Category:    "history",
 			Action: func(c *cli.Context, value string) error {
 				text := sdk.GetSdkText()
 				text.SetSelectedHistory(value)
@@ -58,6 +77,7 @@ func textFlags() []cli.Flag {
 			Aliases:     []string{"m"},
 			Usage:       l.Get("sdk-model-usage"),
 			DefaultText: textSdk.GetModel(),
+			Category:    "text",
 			Action: func(c *cli.Context, value string) error {
 				text := sdk.GetSdkText()
 				text.SetModel(value)
@@ -69,6 +89,7 @@ func textFlags() []cli.Flag {
 			Aliases:     []string{"t"},
 			Usage:       l.Get("text-temp-usage"),
 			DefaultText: strconv.FormatFloat(textSdk.GetTemp(), 'f', -1, 64),
+			Category:    "text",
 			Action: func(c *cli.Context, value float64) error {
 				text := sdk.GetSdkText()
 				text.SetTemp(value)
@@ -76,9 +97,10 @@ func textFlags() []cli.Flag {
 			},
 		},
 		&cli.StringSliceFlag{
-			Name:    "system",
-			Aliases: []string{"s"},
-			Usage:   l.Get("text-system-usage"),
+			Name:     "context",
+			Aliases:  []string{"s"},
+			Usage:    l.Get("text-system-usage"),
+			Category: "text",
 			Action: func(c *cli.Context, values []string) error {
 				text := sdk.GetSdkText()
 				var content []string
@@ -102,9 +124,10 @@ func textFlags() []cli.Flag {
 			},
 		},
 		&cli.StringSliceFlag{
-			Name:    "file",
-			Aliases: []string{"f"},
-			Usage:   l.Get("text-file-usage"),
+			Name:     "file",
+			Aliases:  []string{"f"},
+			Usage:    l.Get("text-file-usage"),
+			Category: "text",
 			Action: func(c *cli.Context, files []string) error {
 				text := sdk.GetSdkText()
 				var fileContent []string
@@ -132,6 +155,7 @@ func textFlags() []cli.Flag {
 			Aliases:            []string{"c"},
 			Usage:              l.Get("text-clear-usage"),
 			DisableDefaultText: true,
+			Category:           "history",
 			Action: func(c *cli.Context, value bool) error {
 				text := sdk.GetSdkText()
 				text.ClearHistory()
@@ -147,6 +171,7 @@ func textFlags() []cli.Flag {
 			Aliases:            []string{"l"},
 			Usage:              l.Get("text-list-history-usage"),
 			DisableDefaultText: true,
+			Category:           "history",
 			Action: func(c *cli.Context, value bool) error {
 				if err := service.ListHistory(true); err != nil {
 					return err
@@ -160,6 +185,7 @@ func textFlags() []cli.Flag {
 			Aliases:            []string{"L"},
 			Usage:              l.Get("text-list-history-name-usage"),
 			DisableDefaultText: true,
+			Category:           "history",
 			Action: func(c *cli.Context, value bool) error {
 				text := sdk.GetSdkText()
 				for _, name := range text.GetHistoryNames() {
@@ -173,7 +199,9 @@ func textFlags() []cli.Flag {
 }
 
 func textAction(c *cli.Context) error {
-	if c.NArg() == 0 {
+	textSdk := sdk.GetSdkText()
+
+	if c.NArg() == 0 && !textSdk.GetInerte() {
 		if err := service.InteractiveMode(); err != nil {
 			return err
 		}

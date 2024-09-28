@@ -27,6 +27,10 @@ func SendTextRequest(prompt string) error {
 		return err
 	}
 
+	if resp.IsEmpty() {
+		return nil
+	}
+
 	fmt.Println(resp.GetContent())
 
 	return nil
@@ -49,6 +53,10 @@ func InteractiveMode() error {
 		resp, err := textSdk.SendRequest(input)
 		if err != nil {
 			return err
+		}
+
+		if resp.IsEmpty() {
+			continue
 		}
 
 		fmt.Print("\n")

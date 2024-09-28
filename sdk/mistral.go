@@ -30,6 +30,7 @@ func NewMistralText(apiKey, model string, temp float64) (*MistralText, error) {
 			Name:   "mistral",
 			ApiUrl: "https://api.mistral.ai/v1/chat/completions",
 			ApiKey: apiKey,
+			Inerte: false,
 		},
 		SdkText: SdkText{
 			Model: "mistral-medium",
@@ -56,7 +57,16 @@ func NewMistralText(apiKey, model string, temp float64) (*MistralText, error) {
 func (m *MistralText) SendRequest(text string) (Message, error) {
 	var textResponse OpenaiResponse
 
-	m.AppendHistory("user", text)
+	if text != "" {
+		m.AppendHistory("user", text)
+	}
+
+	if m.GetInerte() {
+		if err := m.SaveHistory(); err != nil {
+			return Message{}, err
+		}
+		return Message{}, nil
+	}
 
 	jsonBody, err := json.Marshal(OpenaiBody{
 		Model:    m.Model,

@@ -37,6 +37,7 @@ func NewDeepL(apiKey string) (*DeepL, error) {
 			Name:   "deepl",
 			ApiUrl: "https://api-free.deepl.com/v2/translate",
 			ApiKey: apiKey,
+			Inerte: false,
 		},
 		SdkTranslate: SdkTranslate{
 			SourceLang: "",

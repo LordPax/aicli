@@ -51,6 +51,7 @@ func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
 			Name:   "openai",
 			ApiUrl: "https://api.openai.com/v1/chat/completions",
 			ApiKey: apiKey,
+			Inerte: false,
 		},
 		SdkText: SdkText{
 			Model: "gpt-4",
@@ -77,7 +78,16 @@ func NewOpenaiText(apiKey, model string, temp float64) (*OpenaiText, error) {
 func (o *OpenaiText) SendRequest(text string) (Message, error) {
 	var textResponse OpenaiResponse
 
-	o.AppendHistory("user", text)
+	if text != "" {
+		o.AppendHistory("user", text)
+	}
+
+	if o.GetInerte() {
+		if err := o.SaveHistory(); err != nil {
+			return Message{}, err
+		}
+		return Message{}, nil
+	}
 
 	jsonBody, err := json.Marshal(OpenaiBody{
 		Model:    o.Model,

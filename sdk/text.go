@@ -25,6 +25,10 @@ type Message struct {
 	Content []Content `json:"content"`
 }
 
+func (m *Message) IsEmpty() bool {
+	return len(m.Content) == 0
+}
+
 func (m *Message) GetContent() string {
 	var text string
 

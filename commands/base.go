@@ -13,9 +13,10 @@ func MainFlags() []cli.Flag {
 	l := lang.GetLocalize()
 	return []cli.Flag{
 		&cli.BoolFlag{
-			Name:    "silent",
-			Aliases: []string{"s"},
-			Usage:   l.Get("silent"),
+			Name:               "silent",
+			Aliases:            []string{"s"},
+			Usage:              l.Get("silent"),
+			DisableDefaultText: true,
 			Action: func(c *cli.Context, value bool) error {
 				log, err := utils.GetLog()
 				if err != nil {

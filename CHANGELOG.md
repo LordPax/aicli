@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Add parameter -i for text command to not make api call
+
+### Changed
+
+* Improve the way we initialize the sdk
+* Rename `system` parameter to `context` for text command (breaking change)
+
 ## [0.2.0] - 2024-09-27
 
 ### Added
