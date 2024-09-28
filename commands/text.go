@@ -96,29 +96,24 @@ func textFlags() []cli.Flag {
 				return nil
 			},
 		},
-		&cli.StringSliceFlag{
+		&cli.StringFlag{
 			Name:     "context",
 			Aliases:  []string{"s"},
 			Usage:    l.Get("text-system-usage"),
 			Category: "text",
-			Action: func(c *cli.Context, values []string) error {
+			Action: func(c *cli.Context, value string) error {
 				text := sdk.GetSdkText()
-				var content []string
 
-				for _, value := range values {
-					if value == "-" {
-						stdin, err := io.ReadAll(os.Stdin)
-						if err != nil {
-							return err
-						}
-
-						value = string(stdin)
+				if value == "-" {
+					stdin, err := io.ReadAll(os.Stdin)
+					if err != nil {
+						return err
 					}
 
-					content = append(content, value)
+					value = string(stdin)
 				}
 
-				text.AppendHistory("system", content...)
+				text.AppendHistory("system", value)
 
 				return nil
 			},

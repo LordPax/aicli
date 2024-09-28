@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+* Parameter -s accepte now one value (breaking change)
+
 ## [0.3.0] - 2024-09-28
 
 ### Added
