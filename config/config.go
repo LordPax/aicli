@@ -14,7 +14,7 @@ var home, _ = os.UserHomeDir()
 
 var (
 	NAME            = "aicli"
-	VERSION         = "0.2.0"
+	VERSION         = "0.3.0"
 	CONFIG_DIR      = path.Join(home, ".config", "aicli")
 	CONFIG_FILE     = path.Join(CONFIG_DIR, "config.ini")
 	LOG_FILE        = path.Join(CONFIG_DIR, "log")
