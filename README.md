@@ -12,6 +12,18 @@ Projet to use ai api to generate text, image, etc.
 - [ ] command speech
 - [ ] command tts
 
+## Available SDK
+
+### Text Generation
+
+- openai
+- claude
+- mistral
+
+### Translation
+
+- deepl
+
 ## Build and install
 
 1. Clone the repository:
@@ -77,12 +89,12 @@ bind H new-window "aicli text" \; rename-window "aicli"
 
 ## Vim plugin
 
-You can find the vim plugin here
+You can install [vim-aicli](https://github.com/LordPax/vim-aicli) to use aicli in vim.
 
 Add the following line to your `.vimrc`:
 
 ```vim
-Plug 'LordPax/vim-aigpt'
+Plug 'LordPax/vim-aicli'
 ```
 
 ## Integration with i3
