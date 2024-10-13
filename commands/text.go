@@ -150,6 +150,30 @@ func textFlags() []cli.Flag {
 				return nil
 			},
 		},
+		&cli.StringSliceFlag{
+			Name:     "url",
+			Aliases:  []string{"u"},
+			Usage:    l.Get("text-url-usage"),
+			Category: "text",
+			Action: func(c *cli.Context, urls []string) error {
+				text := sdk.GetSdkText()
+
+				for _, url := range urls {
+					f, err := utils.GetFileFromUrl(url)
+					if err != nil {
+						return err
+					}
+
+					if len(f) == 0 {
+						return fmt.Errorf(l.Get("empty-file"), url)
+					}
+
+					text.AppendHistory("system", string(f))
+				}
+
+				return nil
+			},
+		},
 		&cli.BoolFlag{
 			Name:               "clear",
 			Aliases:            []string{"c"},

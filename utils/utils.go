@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -79,4 +80,14 @@ func IsFileType(buf []byte, fileType []string) string {
 		}
 	}
 	return ""
+}
+
+func GetFileFromUrl(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return io.ReadAll(resp.Body)
 }

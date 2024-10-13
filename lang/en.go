@@ -24,6 +24,7 @@ var EN_STRINGS = LangString{
 	"translate-input":              "(\"exit\" to quit) " + utils.Blue + "> " + utils.Reset,
 	"text-list-history-usage":      "List history",
 	"text-list-history-name-usage": "List history names",
+	"text-url-usage":               "URL of a web page",
 	"type-required":                "Type is required",
 	"api-key-required":             "API key is required",
 	"empty-file":                   "File \"%s\" is empty",

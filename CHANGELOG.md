@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+* Add parameter -u for text command to web page content
+
 ### Changed
 
 * Parameter -f in text command accept image file (only for claude sdk)

@@ -24,6 +24,7 @@ var FR_STRINGS = LangString{
 	"translate-input":              "(\"exit\" pour quitter) " + utils.Blue + "> " + utils.Reset,
 	"text-list-history-usage":      "Lister l'historique",
 	"text-list-history-name-usage": "Lister les noms d'historique",
+	"text-url-usage":               "URL d'une page web",
 	"type-required":                "Le type est requis",
 	"api-key-required":             "La clé API est requise",
 	"empty-file":                   "Le fichier \"%s\" est vide",
