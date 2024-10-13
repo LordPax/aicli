@@ -1,10 +1,10 @@
 package sdk
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"os"
 	"path"
-	"strings"
 
 	"github.com/LordPax/aicli/config"
 	"github.com/LordPax/aicli/utils"
@@ -19,7 +19,8 @@ type ITextHistory interface {
 	GetSelectedHistory() string
 	ClearHistory()
 	GetMessage(index int) *Message
-	AppendMessage(index int, text ...string) Message
+	AppendTextMessage(index int, text ...string) Message
+	AppendImageHistory(role, fileType string, file []byte) error
 	GetHistoryNames() []string
 }
 
@@ -72,6 +73,20 @@ func (t *TextHistory) AppendHistory(role string, text ...string) Message {
 	return message
 }
 
+func (t *TextHistory) AppendImageHistory(role, fileType string, file []byte) error {
+	name := t.SelectedHistory
+
+	str := base64.StdEncoding.EncodeToString(file)
+
+	message := Message{
+		Role:    role,
+		Content: []IContent{NewContentImage(str, fileType)},
+	}
+	t.History[name] = append(t.History[name], message)
+
+	return nil
+}
+
 func (t *TextHistory) SaveHistory() error {
 	f, err := os.Create(t.HistoryFile)
 	if err != nil {
@@ -101,8 +116,19 @@ func (t *TextHistory) LoadHistory() error {
 		return nil
 	}
 
-	if err := json.Unmarshal(f, &t.History); err != nil {
+	var tempHistory map[string][]json.RawMessage
+	if err := json.Unmarshal(f, &tempHistory); err != nil {
 		return err
+	}
+
+	t.History = make(map[string][]Message)
+	for key, rawMessages := range tempHistory {
+		t.History[key] = make([]Message, len(rawMessages))
+		for i, rawMessage := range rawMessages {
+			if err := json.Unmarshal(rawMessage, &t.History[key][i]); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
@@ -126,7 +152,7 @@ func (t *TextHistory) GetMessage(index int) *Message {
 	return &t.History[name][index]
 }
 
-func (t *TextHistory) AppendMessage(index int, text ...string) Message {
+func (t *TextHistory) AppendTextMessage(index int, text ...string) Message {
 	name := t.SelectedHistory
 	message := t.GetMessage(index)
 
@@ -148,14 +174,11 @@ func (t *TextHistory) GetHistoryNames() []string {
 	return names
 }
 
-func textContent(text ...string) []Content {
-	var content []Content
+func textContent(text ...string) []IContent {
+	var content []IContent
 
 	for _, t := range text {
-		content = append(content, Content{
-			Type: "text",
-			Text: strings.TrimSpace(t),
-		})
+		content = append(content, NewContentText(t))
 	}
 
 	return content

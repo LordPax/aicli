@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -10,19 +11,113 @@ import (
 
 var sdkTextInstance ITextService
 
-type Content struct {
+type IContent interface {
+	GetValue() string
+}
+
+type ContentText struct {
 	Type string `json:"type"`
 	Text string `json:"text"`
-	// Source struct {
-	// 	Type      string `json:"type"`
-	// 	MediaType string `json:"media_type"`
-	// 	Data      string `json:"data"`
-	// } `json:"source"`
+}
+
+func NewContentText(text string) *ContentText {
+	return &ContentText{
+		Type: "text",
+		Text: text,
+	}
+}
+
+func (c *ContentText) GetValue() string {
+	return c.Text
+}
+
+type ContentImage struct {
+	Type   string `json:"type"`
+	Source struct {
+		Type      string `json:"type"`
+		MediaType string `json:"media_type"`
+		Data      string `json:"data"`
+	} `json:"source"`
+}
+
+func NewContentImage(data, fileType string) *ContentImage {
+	return &ContentImage{
+		Type: "image",
+		Source: struct {
+			Type      string `json:"type"`
+			MediaType string `json:"media_type"`
+			Data      string `json:"data"`
+		}{
+			Type:      "base64",
+			MediaType: fileType,
+			Data:      data,
+		},
+	}
+}
+
+func (c *ContentImage) GetValue() string {
+	return "image: " + c.Source.MediaType
 }
 
 type Message struct {
-	Role    string    `json:"role"`
-	Content []Content `json:"content"`
+	Role    string     `json:"role"`
+	Content []IContent `json:"content"`
+}
+
+type AuxMessage struct {
+	Role    string          `json:"role"`
+	Content json.RawMessage `json:"content"`
+}
+
+func (m *Message) UnmarshalJSON(data []byte) error {
+	var aux AuxMessage
+
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+
+	m.Role = aux.Role
+	m.Content = []IContent{}
+
+	var contentArray []json.RawMessage
+	if err := json.Unmarshal(aux.Content, &contentArray); err != nil {
+		return err
+	}
+
+	for _, item := range contentArray {
+		content, err := unmarshalContent(item)
+		if err != nil {
+			return err
+		}
+		m.Content = append(m.Content, content)
+	}
+
+	return nil
+}
+
+func unmarshalContent(data []byte) (IContent, error) {
+	var temp map[string]interface{}
+	if err := json.Unmarshal(data, &temp); err != nil {
+		return nil, err
+	}
+
+	if _, ok := temp["text"]; ok {
+		var ct ContentText
+		if err := json.Unmarshal(data, &ct); err != nil {
+			return nil, err
+		}
+		return &ct, nil
+	}
+
+	if _, ok := temp["source"]; ok {
+		var ci ContentImage
+		if err := json.Unmarshal(data, &ci); err != nil {
+			return nil, err
+		}
+		return &ci, nil
+	}
+
+	return nil, fmt.Errorf("unknown content type")
 }
 
 func (m *Message) IsEmpty() bool {
@@ -33,17 +128,14 @@ func (m *Message) GetContent() string {
 	var text string
 
 	if len(m.Content) == 1 {
-		return m.Content[0].Text
+		return m.Content[0].GetValue()
 	}
 
 	for i, c := range m.Content {
-		if c.Type != "text" {
-			continue
-		}
 		if i != 0 {
 			text += "\n---\n"
 		}
-		text += c.Text
+		text += c.GetValue()
 	}
 
 	return text

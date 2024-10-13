@@ -3,6 +3,7 @@ module github.com/LordPax/aicli
 go 1.23.1
 
 require (
+	github.com/h2non/filetype v1.1.3
 	github.com/urfave/cli/v2 v2.27.3
 	golang.org/x/term v0.24.0
 	gopkg.in/ini.v1 v1.67.0

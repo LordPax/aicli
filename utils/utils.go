@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/h2non/filetype"
 	"golang.org/x/term"
 )
 
@@ -15,6 +16,10 @@ const (
 	Red    = Escape + "[31m"
 	Green  = Escape + "[32m"
 	Blue   = Escape + "[34m"
+)
+
+var (
+	IMAGE = []string{"jpg", "jpeg", "png", "gif", "webp"}
 )
 
 func FileExist(file string) bool {
@@ -65,4 +70,13 @@ func Input(prompt string, defaultVal string, nullable bool) string {
 	}
 
 	return line
+}
+
+func IsFileType(buf []byte, fileType []string) string {
+	for _, t := range fileType {
+		if filetype.Is(buf, t) {
+			return t
+		}
+	}
+	return ""
 }

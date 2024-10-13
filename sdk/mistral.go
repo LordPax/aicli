@@ -3,9 +3,11 @@ package sdk
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 
+	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/utils"
 )
 
@@ -111,4 +113,9 @@ func (m *MistralText) SendRequest(text string) (Message, error) {
 	}
 
 	return respMessage, nil
+}
+
+func (t *MistralText) AppendImageHistory(role, fileType string, file []byte) error {
+	l := lang.GetLocalize()
+	return fmt.Errorf(l.Get("not-implemented"), "AppendImageHistory")
 }

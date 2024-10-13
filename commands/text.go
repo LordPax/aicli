@@ -9,6 +9,7 @@ import (
 	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/sdk"
 	"github.com/LordPax/aicli/service"
+	"github.com/LordPax/aicli/utils"
 
 	cli "github.com/urfave/cli/v2"
 )
@@ -125,7 +126,6 @@ func textFlags() []cli.Flag {
 			Category: "text",
 			Action: func(c *cli.Context, files []string) error {
 				text := sdk.GetSdkText()
-				var fileContent []string
 
 				for _, file := range files {
 					f, err := os.ReadFile(file)
@@ -137,10 +137,15 @@ func textFlags() []cli.Flag {
 						return fmt.Errorf(l.Get("empty-file"), file)
 					}
 
-					fileContent = append(fileContent, string(f))
-				}
+					if fileType := utils.IsFileType(f, utils.IMAGE); fileType != "" {
+						if err := text.AppendImageHistory("system", "image/"+fileType, f); err != nil {
+							return err
+						}
+						continue
+					}
 
-				text.AppendHistory("system", fileContent...)
+					text.AppendHistory("system", string(f))
+				}
 
 				return nil
 			},

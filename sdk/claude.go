@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"io"
@@ -10,8 +11,8 @@ import (
 )
 
 type ClaudeResponse struct {
-	Role    string    `json:"role"`
-	Content []Content `json:"content"`
+	Role    string        `json:"role"`
+	Content []ContentText `json:"content"`
 }
 
 func (c *ClaudeResponse) GetContent() string {
@@ -137,7 +138,7 @@ func (c *ClaudeText) AppendHistory(role string, text ...string) Message {
 
 	// If the last message is from the same role, append the new text to the last message
 	if lastMessage != nil && lastMessage.Role == role {
-		return c.AppendMessage(idLastMsg, text...)
+		return c.AppendTextMessage(idLastMsg, text...)
 	}
 
 	message := Message{
@@ -147,4 +148,22 @@ func (c *ClaudeText) AppendHistory(role string, text ...string) Message {
 	c.History[name] = append(c.History[name], message)
 
 	return message
+}
+
+func (c *ClaudeText) AppendImageHistory(role, fileType string, file []byte) error {
+	name := c.SelectedHistory
+
+	if role == "system" {
+		role = "user"
+	}
+
+	str := base64.StdEncoding.EncodeToString(file)
+
+	message := Message{
+		Role:    role,
+		Content: []IContent{NewContentImage(str, fileType)},
+	}
+	c.History[name] = append(c.History[name], message)
+
+	return nil
 }
