@@ -56,10 +56,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	imageCmd, err := commands.ImageCommand()
+	if err != nil {
+		log.PrintfErr("%v\n", err)
+		os.Exit(1)
+	}
+
 	app.Commands = []*cli.Command{
 		textCmd,
 		translateCmd,
-		// TODO : add command for image, audio and translate
+		imageCmd,
+		// TODO : add command for audio
 	}
 
 	if err := app.Run(os.Args); err != nil {

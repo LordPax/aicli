@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Add sdk openai for image generation command
+* Add image generation command
+
 ## [0.5.0]
 
 ### Added

@@ -33,4 +33,8 @@ var EN_STRINGS = LangString{
 	"translate-source-usage":       "Source language",
 	"translate-target-usage":       "Target language",
 	"translate-target-required":    "Target language is required",
+	"image-usage":                  "Generate an image from a prompt",
+	"image-size-usage":             "Set the size of the image",
+	"image-nb-usage":               "Set the number of images",
+	"image-output-usage":           "Set the name of the output file",
 }

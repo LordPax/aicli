@@ -66,7 +66,7 @@ func getConfigTranslate(sdkType string) (string, string, error) {
 	if apiKey == "" {
 		apiKey = configTranslate.Key(sdkType + "-apiKey").String()
 		if apiKey == "" {
-			return "", "", fmt.Errorf(l.Get("api-key-required"), sdkType)
+			return "", "", errors.New(l.Get("api-key-required"))
 		}
 	}
 

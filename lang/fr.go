@@ -33,4 +33,8 @@ var FR_STRINGS = LangString{
 	"translate-source-usage":       "Langue source",
 	"translate-target-usage":       "Langue cible",
 	"translate-target-required":    "La langue cible est requise",
+	"image-usage":                  "Générer une image à partir d'un prompt",
+	"image-size-usage":             "Définir la taille de l'image",
+	"image-nb-usage":               "Définir le nombre d'images",
+	"image-output-usage":           "Définir le nom du fichier de sortie",
 }
