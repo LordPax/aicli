@@ -23,13 +23,20 @@ var (
 	CONFIG_EXEMPLE  = `
 [text]
 type=openai
-model=gpt-4
-apiKey=yoursecretapikey
+openai-model=gpt-4
+openai-apiKey=yoursecretapikey
+claude-model=claude-3-5-sonnet-20240620
+claude-apiKey=yoursecretapikey
 temp=0.7
 
 [translate]
 type=deepl
-apiKey=yoursecretapikey`
+apiKey=yoursecretapikey
+
+[image]
+type=openai
+model=dall-e-3
+`
 )
 
 func InitConfig() error {

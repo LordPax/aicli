@@ -2,12 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+* Fix config example in README.md
+
 ### Added
 
 * Add sdk openai for image generation command
 * Add image generation command
 
-## [0.5.0]
+## [0.5.0] - 2024-10-13
 
 ### Added
 

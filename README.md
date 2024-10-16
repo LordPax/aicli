@@ -54,20 +54,6 @@ Will generate a config file at `~/.config/aicli/config.ini`
 ```ini
 [text]
 type=openai
-model=gpt-4
-apiKey=yoursecretapikey
-temp=0.7
-
-[translate]
-type=deepl
-apiKey=yoursecretapikey
-```
-
-With type as prefix, parameter will be specific for this type, if there is no prefix, parameter will be global
-
-```ini
-[text]
-type=openai
 openai-model=gpt-4
 openai-apiKey=yoursecretapikey
 claude-model=claude-3-5-sonnet-20240620
@@ -76,6 +62,11 @@ temp=0.7
 
 [translate]
 type=deepl
+apiKey=yoursecretapikey
+
+[image]
+type=openai
+model=dall-e-3
 apiKey=yoursecretapikey
 ```
 
