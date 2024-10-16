@@ -37,4 +37,5 @@ var EN_STRINGS = LangString{
 	"image-size-usage":             "Set the size of the image",
 	"image-nb-usage":               "Set the number of images",
 	"image-output-usage":           "Set the name of the output file",
+	"image-save":                   "Image saved under \"%s\"\n",
 }

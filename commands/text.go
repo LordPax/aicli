@@ -25,7 +25,7 @@ func TextCommand() (*cli.Command, error) {
 		Name:      "text",
 		Usage:     l.Get("text-usage"),
 		ArgsUsage: "[prompt|-]",
-		Aliases:   []string{"t"},
+		Aliases:   []string{"te"},
 		Action:    textAction,
 		Flags:     textFlags(),
 	}, nil

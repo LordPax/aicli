@@ -5,6 +5,7 @@ import (
 
 	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/sdk"
+	"github.com/LordPax/aicli/service"
 	cli "github.com/urfave/cli/v2"
 )
 
@@ -19,7 +20,7 @@ func ImageCommand() (*cli.Command, error) {
 		Name:      "image",
 		Usage:     l.Get("image-usage"),
 		ArgsUsage: "[image|-]",
-		Aliases:   []string{"i"},
+		Aliases:   []string{"im"},
 		Action:    imageAction,
 		Flags:     imageFlags(),
 	}, nil
@@ -94,5 +95,6 @@ func imageFlags() []cli.Flag {
 }
 
 func imageAction(c *cli.Context) error {
-	return nil
+	prompt := c.Args().First()
+	return service.SendImageRequest(prompt)
 }

@@ -16,7 +16,7 @@ type IImageService interface {
 }
 
 type ISdkImage interface {
-	SendRequest(prompt string) (OpenaiImageResponse, error)
+	SendRequest(prompt string) error
 	SetModel(model string)
 	GetModel() string
 	SetSize(size string)

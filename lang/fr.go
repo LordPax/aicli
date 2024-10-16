@@ -37,4 +37,5 @@ var FR_STRINGS = LangString{
 	"image-size-usage":             "Définir la taille de l'image",
 	"image-nb-usage":               "Définir le nombre d'images",
 	"image-output-usage":           "Définir le nom du fichier de sortie",
+	"image-save":                   "L'image a été enregistrée sous \"%s\"\n",
 }

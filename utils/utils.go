@@ -2,6 +2,7 @@ package utils
 
 import (
 	"bytes"
+	"encoding/base64"
 	"io"
 	"net/http"
 	"os"
@@ -90,4 +91,13 @@ func GetFileFromUrl(url string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	return io.ReadAll(resp.Body)
+}
+
+func ConvertB64ToImage(name, b64 string) error {
+	dec, err := base64.StdEncoding.DecodeString(b64)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(name, dec, 0644)
 }
