@@ -8,7 +8,7 @@ Projet to use ai api to generate text, image, etc.
 
 - [x] command text
 - [x] command translate
-- [ ] command image
+- [x] command image
 - [ ] command speech
 - [ ] command tts
 
