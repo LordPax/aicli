@@ -33,6 +33,12 @@ git clone https://github.com/LordPax/aicli.git
 cd aicli
 ```
 
+or clone on nostr with [ngit](https://github.com/DanConwayDev/ngit-cli)
+
+```bash
+git clone nostr://npub1wexup25szzmga9h9znr2v549ytk5c8kuvdnvxa9em58kr38wtrxsvpq0vc/aicli
+```
+
 2. Build the project:
 
 ```bash
