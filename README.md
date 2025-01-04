@@ -20,6 +20,10 @@ Projet to use ai api to generate text, image, etc.
 - claude
 - mistral
 
+### Image Generation
+
+- openai
+
 ### Translation
 
 - deepl
@@ -94,6 +98,7 @@ Add the following line to your `.vimrc`:
 Plug 'LordPax/vim-aicli'
 ```
 
+<!--
 ## Integration with i3
 
 Add the following line to your `~/.config/i3/config`:
@@ -101,3 +106,4 @@ Add the following line to your `~/.config/i3/config`:
 ```
 bindsym $mod+s exec /usr/bin/aicli -c -g speech
 ```
+-->

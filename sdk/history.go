@@ -3,6 +3,7 @@ package sdk
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path"
 
@@ -22,6 +23,7 @@ type ITextHistory interface {
 	AppendTextMessage(index int, text ...string) Message
 	AppendImageHistory(role, fileType string, file []byte) error
 	GetHistoryNames() []string
+	ListHistoryNames()
 }
 
 type TextHistory struct {
@@ -172,6 +174,16 @@ func (t *TextHistory) GetHistoryNames() []string {
 	}
 
 	return names
+}
+
+func (t *TextHistory) ListHistoryNames() {
+	for _, name := range t.GetHistoryNames() {
+		if name == t.GetSelectedHistory() {
+			fmt.Println(utils.Green + name + utils.Reset)
+			continue
+		}
+		fmt.Println(name)
+	}
 }
 
 func textContent(text ...string) []IContent {

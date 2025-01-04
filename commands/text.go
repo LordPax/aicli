@@ -212,9 +212,7 @@ func textFlags() []cli.Flag {
 			Category:           "history",
 			Action: func(c *cli.Context, value bool) error {
 				text := sdk.GetSdkText()
-				for _, name := range text.GetHistoryNames() {
-					fmt.Println(name)
-				}
+				text.ListHistoryNames()
 				os.Exit(0)
 				return nil
 			},

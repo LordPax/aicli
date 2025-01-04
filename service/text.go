@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/LordPax/aicli/lang"
 	"github.com/LordPax/aicli/sdk"
@@ -39,6 +41,10 @@ func SendTextRequest(prompt string) error {
 func InteractiveMode() error {
 	textSdk := sdk.GetSdkText()
 	l := lang.GetLocalize()
+	log, err := utils.GetLog()
+	if err != nil {
+		return err
+	}
 
 	if err := ListHistory(false); err != nil {
 		return err
@@ -46,8 +52,13 @@ func InteractiveMode() error {
 
 	for {
 		input := utils.Input(l.Get("text-input"), "", false)
-		if input == "exit" {
-			break
+		ok, err := ParseTextCommand(input)
+		if err != nil {
+			log.PrintfErr("%v\n", err)
+			continue
+		}
+		if ok {
+			continue
 		}
 
 		resp, err := textSdk.SendRequest(input)
@@ -64,8 +75,100 @@ func InteractiveMode() error {
 		fmt.Println(resp.GetContent())
 		fmt.Print("\n")
 	}
+}
 
-	return nil
+func ParseTextCommand(command string) (bool, error) {
+	l := lang.GetLocalize()
+
+	if command[0] != '/' {
+		return false, nil
+	}
+
+	values := strings.Split(command, " ")
+
+	switch values[0][1:] {
+	case "help":
+		HelpTextCommand()
+		return true, nil
+	case "exit", "e":
+		os.Exit(0)
+		return true, nil
+	case "sdk", "s":
+		textSdk := sdk.GetSdkText()
+		if len(values) < 2 {
+			fmt.Println(textSdk.GetName())
+			return true, nil
+		}
+
+		if err := sdk.InitSdkText(values[1]); err != nil {
+			return true, err
+		}
+
+		return true, nil
+	case "model", "m":
+		textSdk := sdk.GetSdkText()
+		if len(values) < 2 {
+			fmt.Println(textSdk.GetModel())
+			return true, nil
+		}
+
+		textSdk.SetModel(values[1])
+
+		return true, nil
+	case "temp", "t":
+		textSdk := sdk.GetSdkText()
+		if len(values) < 2 {
+			fmt.Println(textSdk.GetTemp())
+			return true, nil
+		}
+
+		temp, err := strconv.ParseFloat(values[1], 64)
+		if err != nil {
+			return true, err
+		}
+
+		textSdk.SetTemp(temp)
+		return true, nil
+	case "history", "h":
+		textSdk := sdk.GetSdkText()
+		if len(values) < 2 {
+			textSdk.ListHistoryNames()
+			return true, nil
+		}
+
+		textSdk.SetSelectedHistory(values[1])
+		fmt.Printf(l.Get("text-history-selected"), values[1])
+		return true, nil
+	case "show":
+		if err := ListHistory(true); err != nil {
+			return true, err
+		}
+
+		return true, nil
+	case "clear", "c":
+		textSdk := sdk.GetSdkText()
+		textSdk.ClearHistory()
+		if err := textSdk.SaveHistory(); err != nil {
+			return true, err
+		}
+
+		fmt.Printf(l.Get("text-history-cleared"), textSdk.GetSelectedHistory())
+		return true, nil
+	}
+
+	return false, fmt.Errorf(l.Get("unknown-command"), command)
+}
+
+func HelpTextCommand() {
+	l := lang.GetLocalize()
+	fmt.Println(l.Get("text-command-help-usage"))
+	fmt.Println(l.Get("text-command-exit-usage"))
+	fmt.Println(l.Get("text-command-sdk-usage"))
+	fmt.Println(l.Get("text-command-model-usage"))
+	fmt.Println(l.Get("text-command-temp-usage"))
+	fmt.Println(l.Get("text-command-history-usage"))
+	fmt.Println(l.Get("text-command-clear-usage"))
+	fmt.Println(l.Get("text-command-show-usage"))
 }
 
 func ListHistory(showMsg bool) error {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+* Add command parser in text interactive mode
+* Add command parser in translate interactive mode
+
 ## [0.6.0] - 2024-10-16
 
 ### Changed
