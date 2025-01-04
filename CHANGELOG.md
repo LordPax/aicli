@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+* Load history bofore listing
+
 ## [0.7.0] - 2025-01-04
 
 ### Added

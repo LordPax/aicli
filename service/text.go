@@ -140,6 +140,11 @@ func ParseTextCommand(command string) (bool, error) {
 		fmt.Printf(l.Get("text-history-selected"), values[1])
 		return true, nil
 	case "show":
+		textSdk := sdk.GetSdkText()
+		if err := textSdk.LoadHistory(); err != nil {
+			return true, err
+		}
+
 		if err := ListHistory(true); err != nil {
 			return true, err
 		}
